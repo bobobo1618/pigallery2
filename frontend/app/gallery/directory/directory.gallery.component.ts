@@ -33,6 +33,21 @@ export class GalleryDirectoryComponent implements OnInit, OnDestroy {
     if (this.directory.media.length > 0) {
       return this.directory.media[0];
     }
+    
+    // Look for a thumbnail from a subdirectory by doing a BFS.
+    if (this.directory.directories != null && this.directory.directories.length > 0) { 
+      let queue = Object.assign([], this.directory.directories);
+      while (queue.length > 0) {
+        let directory = queue.shift();
+        if (directory.media.length > 0) {
+          return directory.media[0];
+        }
+        for (let subdirectory of directory) {
+          queue.push(subdirectory);
+        }
+      }
+    }
+
     return null;
   }
 
